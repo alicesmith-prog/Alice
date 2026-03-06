@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PSAT Jeopardy — Reading, Evidence &amp; Grammar</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════
+   JEWEL-TONE GAMESHOW — deep emerald, 
+   burnished gold, warm candlelight cream
+   ═══════════════════════════════════════ */
+:root {
+  --bg:        #04140d;
+  --surface:   #081f12;
+  --card:      #0c2918;
+  --border:    #1a4a28;
+  --green:     #0a7c3e;
+  --green2:    #12a854;
+  --green3:    #3dd68c;
+  --gold:      #d4a017;
+  --gold2:     #f0c84a;
+  --gold3:     #fff0a0;
+  --cream:     #f5eedc;
+  --warm:      #c8b89a;
+  --muted:     #4a6e52;
+  --correct:   #3dd68c;
+  --wrong:     #e84855;
+  --wrong2:    #ff8a94;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'Lora', Georgia, serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Rich texture overlay — subtle diamond pattern */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(45deg, rgba(10,124,62,.06) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(10,124,62,.06) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(10,124,62,.06) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(10,124,62,.06) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  pointer-events: none; z-index: 0;
+}
+
+/* Ambient glow at top */
+body::after {
+  content: '';
+  position: fixed; top: 0; left: 0; right: 0; height: 280px;
+  background: radial-gradient(ellipse 70% 100% at 50% -20%, rgba(212,160,23,.18) 0%, transparent 100%);
+  pointer-events: none; z-index: 0;
+}
+
+#app {
+  position: relative; z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 22px 18px 80px;
+}
+
+/* ═══════════════════════════════════════
+   SCREENS
+   ═══════════════════════════════════════ */
+.screen { display: none; }
+.screen.active { display: block; animation: reveal .6s cubic-bezier(.16,1,.3,1); }
+
+@keyframes reveal {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   SPLASH SCREEN
+   ═══════════════════════════════════════ */
+.splash {
+  text-align: center;
+  padding: 56px 20px 64px;
+}
+
+.crown { font-size: 3.2rem; margin-bottom: 12px; display: block;
+  animation: float 4s ease-in-out infinite; }
+@keyframes float {
+  0%,100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-10px) rotate(2deg); }
+}
+
+.splash-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: .72rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+
+.splash-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(3.2rem, 8vw, 5.8rem);
+  font-weight: 900;
+  line-height: .95;
+  letter-spacing: -1px;
+  color: var(--gold2);
+  text-shadow:
+    0 0 60px rgba(212,160,23,.5),
+    0 2px 0 rgba(0,0,0,.4);
+  margin-bottom: 8px;
+}
+
+.splash-title em {
+  font-style: italic;
+  color: var(--gold3);
+}
+
+.splash-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .68rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 52px;
+}
+
+/* Category preview strip */
+.cat-strip {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 44px;
+}
+
+.cat-pill {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--warm);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cat-pill .pip {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Rules card */
+.rules-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 30px 38px;
+  max-width: 580px;
+  margin: 0 auto 48px;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.rules-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--green2), var(--gold));
+}
+
+.rules-card h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold2);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.rules-card li {
+  font-size: .95rem;
+  line-height: 1.75;
+  color: var(--warm);
+  padding-left: 16px;
+  position: relative;
+  list-style: none;
+}
+
+.rules-card li::before {
+  content: '◆';
+  position: absolute; left: 0;
+  color: var(--gold);
+  font-size: .5rem;
+  top: 8px;
+}
+
+.start-btn {
+  display: inline-block;
+  padding: 18px 70px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold2) 50%, var(--gold) 100%);
+  background-size: 200% 100%;
+  color: #1a0e00;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .3s ease;
+  box-shadow:
+    0 4px 0 rgba(0,0,0,.4),
+    0 0 40px rgba(212,160,23,.3);
+  text-shadow: 0 1px 0 rgba(255,255,255,.2);
+}
+
+.start-btn:hover {
+  background-position: right center;
+  transform: translateY(-3px);
+  box-shadow:
+    0 7px 0 rgba(0,0,0,.4),
+    0 0 60px rgba(212,160,23,.5);
+}
+
+.start-btn:active { transform: translateY(0); box-shadow: 0 2px 0 rgba(0,0,0,.4); }
+
+/* ═══════════════════════════════════════
+   GAME SCREEN — HEADER
+   ═══════════════════════════════════════ */
+.game-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.game-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  font-style: italic;
+  color: var(--gold2);
+  letter-spacing: 1px;
+}
+
+.scoreboard {
+  display: flex;
+  gap: 12px;
+}
+
+.score-tile {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 20px;
+  text-align: center;
+  min-width: 100px;
+}
+
+.score-tile .num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--gold2);
+  line-height: 1;
+}
+
+.score-tile .lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: .55rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.progress-bar-wrap {
+  height: 4px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green2), var(--gold));
+  border-radius: 99px;
+  transition: width .5s ease;
+}
+
+.status-line {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+/* ═══════════════════════════════════════
+   JEOPARDY BOARD
+   ═══════════════════════════════════════ */
+.board-scroll { overflow-x: auto; }
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  min-width: 680px;
+}
+
+/* Column headers */
+.col-header {
+  border-radius: 8px;
+  padding: 16px 10px;
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(.72rem, 1.5vw, .9rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  line-height: 1.3;
+  color: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.col-header::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,.15) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.col-header .h-icon { font-size: 1.3rem; display: block; margin-bottom: 5px; }
+
+/* ── Flip card tile ── */
+.flip-wrap {
+  perspective: 900px;
+  cursor: pointer;
+}
+
+.flip-inner {
+  position: relative;
+  width: 100%;
+  padding-bottom: 85%;
+  transform-style: preserve-3d;
+  transition: transform .6s cubic-bezier(.4,0,.2,1);
+}
+
+.flip-wrap.flipped .flip-inner { transform: rotateY(180deg); }
+
+.flip-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+/* Front — gold point value */
+.flip-front {
+  background: linear-gradient(160deg, #14350e 0%, #0c2618 60%, #091e11 100%);
+  border: 2px solid var(--border);
+  transition: border-color .2s, box-shadow .2s, transform .1s;
+}
+
+.flip-wrap:not(.flipped):not(.used):hover .flip-front {
+  border-color: var(--gold);
+  box-shadow:
+    0 0 0 1px var(--gold),
+    0 0 30px rgba(212,160,23,.3),
+    inset 0 0 30px rgba(212,160,23,.05);
+}
+
+.pts-val {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.3rem, 2.8vw, 2rem);
+  font-weight: 700;
+  color: var(--gold2);
+  text-shadow: 0 0 20px rgba(240,200,74,.6);
+  line-height: 1;
+}
+
+/* Back — result after flip */
+.flip-back {
+  background: var(--surface);
+  border: 2px solid var(--border);
+  transform: rotateY(180deg);
+}
+
+.flip-back.won {
+  background: rgba(61,214,140,.08);
+  border-color: var(--correct);
+}
+
+.flip-back.lost {
+  background: rgba(232,72,85,.07);
+  border-color: var(--wrong);
+  opacity: .6;
+}
+
+.flip-icon { font-size: 1.6rem; line-height: 1; }
+.flip-delta {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  letter-spacing: 1px;
+  margin-top: 5px;
+}
+
+/* Finish button */
+
+
+/* ═══════════════════════════════════════
+   QUESTION MODAL
+   ═══════════════════════════════════════ */
+.modal-bg {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(4,20,13,.88);
+  backdrop-filter: blur(8px);
+  z-index: 40;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 16px 40px;
+  overflow-y: auto;
+}
+
+.modal-bg.open { display: flex; animation: fadein .28s ease; }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  background: var(--card);
+  border: 1px solid var(--gold);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 820px;
+  position: relative;
+  margin: auto;
+  box-shadow:
+    0 0 0 1px rgba(212,160,23,.15),
+    0 0 80px rgba(212,160,23,.12),
+    0 40px 100px rgba(0,0,0,.7);
+  animation: modalSlide .38s cubic-bezier(.16,1,.3,1);
+}
+
+@keyframes modalSlide {
+  from { opacity: 0; transform: translateY(30px) scale(.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Gold top bar */
+.modal::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--green2), var(--gold2), var(--green2));
+  border-radius: 18px 18px 0 0;
+}
+
+.modal-inner { padding: 34px 38px 30px; }
+
+.modal-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+
+.m-pts {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--gold2);
+}
+
+.m-cat {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 4px 14px;
+  border-radius: 4px;
+  color: var(--bg);
+  font-weight: 500;
+}
+
+.m-close {
+  position: absolute; top: 18px; right: 20px;
+  background: none; border: none;
+  color: var(--muted);
+  font-size: 1.2rem;
+  cursor: pointer;
+  font-family: 'Playfair Display', serif;
+  line-height: 1;
+  transition: color .15s;
+}
+
+.m-close:hover { color: var(--cream); }
+
+/* Passage */
+.m-passage {
+  background: rgba(10,124,62,.07);
+  border-left: 4px solid var(--green2);
+  border-radius: 2px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  font-style: italic;
+  font-size: .95rem;
+  line-height: 1.82;
+  color: #c0d8c8;
+}
+
+/* Data box */
+.m-data {
+  background: rgba(212,160,23,.06);
+  border: 1px solid rgba(212,160,23,.25);
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: .79rem;
+  line-height: 2;
+  color: #e0d090;
+}
+
+.m-data strong {
+  display: block;
+  font-size: .6rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gold2);
+  margin-bottom: 8px;
+}
+
+/* Stem */
+.m-stem {
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.68;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+
+/* Choices */
+.m-choices { display: flex; flex-direction: column; gap: 9px; }
+
+.choice {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: rgba(255,255,255,.025);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 13px 18px;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Lora', serif;
+  font-size: .95rem;
+  color: var(--cream);
+  line-height: 1.55;
+  transition: all .15s ease;
+}
+
+.choice:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: rgba(212,160,23,.07);
+  transform: translateX(4px);
+}
+
+.choice:disabled { cursor: default; }
+
+.choice.correct { border-color: var(--correct); background: rgba(61,214,140,.1); color: var(--correct); }
+.choice.wrong   { border-color: var(--wrong);   background: rgba(232,72,85,.08);  opacity: .65; }
+.choice.reveal  { border-color: var(--correct); background: rgba(61,214,140,.07); color: var(--correct); }
+
+.c-letter {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  min-width: 22px;
+  color: var(--muted);
+  line-height: 1.3;
+  flex-shrink: 0;
+  transition: color .15s;
+}
+
+.choice.correct .c-letter { color: var(--correct); }
+.choice.wrong   .c-letter { color: var(--wrong); }
+.choice.reveal  .c-letter { color: var(--correct); }
+
+/* Feedback */
+.m-feedback {
+  display: none;
+  margin-top: 18px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  font-size: .93rem;
+  line-height: 1.68;
+  border-left: 4px solid;
+}
+
+.m-feedback.show { display: block; animation: reveal .3s ease; }
+.m-feedback.ok { border-color: var(--correct); background: rgba(61,214,140,.07); color: #90e8c0; }
+.m-feedback.ng { border-color: var(--wrong);   background: rgba(232,72,85,.07);  color: var(--wrong2); }
+
+.fb-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Back-to-board button */
+.back-btn {
+  display: none;
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--green) 0%, var(--green2) 100%);
+  color: var(--cream);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.back-btn:hover { opacity: .9; transform: translateY(-2px); }
+.back-btn.show { display: block; animation: reveal .3s ease .15s both; }
+
+/* ═══════════════════════════════════════
+   END SCREEN
+   ═══════════════════════════════════════ */
+.end-wrap { text-align: center; padding: 54px 20px 40px; }
+
+.end-crown { font-size: 3.5rem; display: block; margin-bottom: 14px; }
+
+.end-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.6rem, 7vw, 4.2rem);
+  font-weight: 900;
+  font-style: italic;
+  color: var(--gold2);
+  line-height: 1;
+  text-shadow: 0 0 50px rgba(212,160,23,.4);
+  margin-bottom: 6px;
+}
+
+.end-score-num {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4.5rem, 12vw, 7.5rem);
+  font-weight: 900;
+  color: var(--gold3);
+  line-height: 1;
+  text-shadow: 0 0 70px rgba(255,240,160,.3);
+  margin: 12px 0 2px;
+}
+
+.end-score-lbl {
+  font-family: 'DM Mono', monospace;
+  font-size: .65rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.end-verdict {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 8px;
+}
+
+.end-msg {
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--warm);
+  max-width: 480px;
+  margin: 0 auto 36px;
+  line-height: 1.78;
+}
+
+.cat-results {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 44px;
+}
+
+.cat-res-pill {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 9px 18px;
+  font-family: 'DM Mono', monospace;
+  font-size: .7rem;
+  letter-spacing: 1px;
+  color: var(--warm);
+}
+
+.cat-res-pill strong { color: var(--correct); }
+
+.end-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+
+.ebtn {
+  padding: 14px 38px;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .2s;
+}
+
+.ebtn.pri {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: #1a0e00;
+  border: none;
+  box-shadow: 0 0 30px rgba(212,160,23,.2);
+}
+
+.ebtn.pri:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(212,160,23,.35); }
+
+.ebtn.sec {
+  background: transparent;
+  color: var(--gold2);
+  border: 2px solid var(--gold);
+}
+
+.ebtn.sec:hover { background: rgba(212,160,23,.08); transform: translateY(-2px); }
+
+/* ═══════════════════════════════════════
+   ANSWER KEY
+   ═══════════════════════════════════════ */
+.ak {
+  border-top: 1px solid var(--border);
+  padding-top: 50px;
+}
+
+.ak-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  font-style: italic;
+  text-align: center;
+  color: var(--gold2);
+  text-shadow: 0 0 40px rgba(212,160,23,.3);
+  margin-bottom: 6px;
+}
+
+.ak-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: .62rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-align: center;
+  color: var(--muted);
+  margin-bottom: 44px;
+}
+
+.ak-cat {
+  margin-bottom: 42px;
+}
+
+.ak-cat-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-style: italic;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ak-item {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(26,74,40,.4);
+}
+
+.ak-item:last-child { border-bottom: none; }
+
+.ak-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 8px; flex-wrap: wrap;
+}
+
+.ak-pts-lbl {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold2);
+  min-width: 40px;
+}
+
+.ak-ans-badge {
+  font-family: 'Playfair Display', serif;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--bg);
+  background: var(--correct);
+  border-radius: 4px;
+  padding: 2px 12px;
+}
+
+.ak-you-correct {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: 1.5px;
+  color: var(--correct);
+}
+
+.ak-you-wrong {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: 1.5px;
+  color: var(--wrong);
+}
+
+.ak-not-played {
+  font-family: 'DM Mono', monospace;
+  font-size: .6rem;
+  letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.ak-expl {
+  font-size: .91rem;
+  line-height: 1.72;
+  color: var(--warm);
+  padding-left: 52px;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media (max-width: 640px) {
+  .board { grid-template-columns: repeat(3, 1fr); }
+  .col-header { font-size: .7rem; padding: 12px 6px; }
+  .modal-inner { padding: 24px 18px 20px; }
+  .ak-expl { padding-left: 0; }
+  .rules-card { padding: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ MODAL ═══════ -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal">
+    <button class="m-close" onclick="closeModal()">✕</button>
+    <div class="modal-inner">
+      <div class="modal-header">
+        <span class="m-pts" id="mPts"></span>
+        <span class="m-cat" id="mCat"></span>
+      </div>
+      <div class="m-passage" id="mPassage" style="display:none"></div>
+      <div class="m-data"    id="mData"    style="display:none"></div>
+      <div class="m-stem"    id="mStem"></div>
+      <div class="m-choices" id="mChoices"></div>
+      <div class="m-feedback" id="mFeedback">
+        <div class="fb-head" id="mFbHead"></div>
+        <div id="mFbBody"></div>
+      </div>
+      <button class="back-btn" id="backBtn" onclick="closeModal()">Return to Board</button>
+    </div>
+  </div>
+</div>
+
+<div id="app">
+
+<!-- ═══════ SPLASH ═══════ -->
+<div class="screen active" id="splashScreen">
+  <div class="splash">
+    <span class="crown">👑</span>
+    <div class="splash-eyebrow">PSAT Reading, Evidence &amp; Grammar</div>
+    <div class="splash-title"><em>Jeopardy</em></div>
+    <div class="splash-sub">5 Categories · 5 Levels Each · 25 Questions</div>
+
+    <div class="cat-strip">
+      <div class="cat-pill"><span class="pip" style="background:#2ecc71"></span>Textual Evidence</div>
+      <div class="cat-pill"><span class="pip" style="background:#f39c12"></span>Quantitative Evidence</div>
+      <div class="cat-pill"><span class="pip" style="background:#3498db"></span>Inference</div>
+      <div class="cat-pill"><span class="pip" style="background:#e74c3c"></span>Grammar</div>
+    </div>
+
+    <div class="rules-card">
+      <h3>How to Play</h3>
+      <ul>
+        <li>Choose any tile — higher point values mean harder questions</li>
+        <li>Answer correctly to earn the points shown on the tile</li>
+        <li>Wrong answers deduct half the tile's value from your score</li>
+        <li>Every answer includes a full explanation to help you learn</li>
+        <li>Play solo, or compete with classmates for the highest score</li>
+        <li>The complete answer key appears when all tiles are done</li>
+      </ul>
+    </div>
+
+    <button class="start-btn" onclick="startGame()">Begin the Game</button>
+  </div>
+</div>
+
+<!-- ═══════ GAME ═══════ -->
+<div class="screen" id="gameScreen">
+  <div class="game-top">
+    <div class="game-logo">PSAT Jeopardy</div>
+    <div class="scoreboard">
+      <div class="score-tile">
+        <div class="num" id="scoreDisp">0</div>
+        <div class="lbl">Score</div>
+      </div>
+    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <div class="status-line" id="statusLine">Choose a category and point value to start</div>
+
+  <div class="board-scroll">
+    <div class="board" id="board"></div>
+  </div>
+
+</div>
+
+<!-- ═══════ END ═══════ -->
+<div class="screen" id="endScreen">
+  <div class="end-wrap">
+    <span class="end-crown">🏆</span>
+    <div class="end-headline">Final Score</div>
+    <div class="end-score-num" id="finalScore">0</div>
+    <div class="end-score-lbl">Points</div>
+    <div class="end-verdict" id="endVerdict"></div>
+    <div class="end-msg" id="endMsg"></div>
+    <div class="cat-results" id="catResults"></div>
+    <div class="end-btns">
+      <button class="ebtn pri" onclick="restartGame()">Play Again</button>
+      <button class="ebtn sec" onclick="goToKey()">Answer Key ↓</button>
+    </div>
+  </div>
+  <div class="ak" id="akSection">
+    <div class="ak-title">Answer Key</div>
+    <div class="ak-sub">All 20 Questions · Complete Explanations</div>
+    <div id="akContent"></div>
+  </div>
+</div>
+
+</div><!-- /#app -->
+
+<script>
+/* ═══════════════════════════════════════════════════
+   ALL QUESTION DATA — 4 categories × 5 questions
+   Passages are BRAND NEW, never used before.
+   Answer distribution is varied across A / B / C / D.
+   ═══════════════════════════════════════════════════ */
+const CATS = [
+  /* ────────────────────────────────────────────────
+     CAT 1 — TEXTUAL EVIDENCE
+     Passage: Climate migration and American cities
+     ──────────────────────────────────────────────── */
+  {
+    id: 'textual',
+    label: 'Textual Evidence',
+    icon: '📖',
+    color: '#2ecc71',
+    dark: '#0e5c2a',
+    passage: `In the coming decades, climate change is expected to trigger one of the largest internal migrations in American history. Rising sea levels, intensifying wildfires, and prolonged droughts are already pushing residents out of coastal and arid regions. Researchers at Columbia University estimate that by 2070, between one and three million Americans may relocate away from climate-vulnerable areas. This movement will not be random. Studies suggest that people tend to migrate toward cities with moderate climates, lower flood risk, and strong employment markets. Midwestern cities such as Minneapolis, Buffalo, and Detroit — once experiencing population decline — are being repositioned as potential "climate havens." However, this influx of newcomers also presents challenges: pressure on housing, infrastructure, and public services in receiving communities may intensify, raising concerns about affordability and displacement of long-term residents.`,
+    qs: [
+      {
+        pts: 100,
+        stem: 'Which detail from the passage provides the most specific evidence for the claim that climate-driven migration is already occurring?',
+        opts: [
+          'Researchers estimate that between one and three million Americans may relocate by 2070.',
+          'Rising sea levels, intensifying wildfires, and prolonged droughts are already pushing residents out of vulnerable areas.',
+          'Midwestern cities are being repositioned as potential climate havens.',
+          'The influx of newcomers will create pressure on housing and infrastructure.'
+        ],
+        ans: 1,
+        expl: 'Choice B is the only detail that describes something happening now — the phrase "already pushing" confirms current, ongoing movement. Choice A refers to a future estimate, not current events. Choices C and D describe future positioning and future challenges, not present migration.'
+      },
+      {
+        pts: 200,
+        stem: 'The passage states that future migration will "not be random." Which detail most directly supports this claim?',
+        opts: [
+          'Climate change is expected to trigger one of the largest internal migrations in American history.',
+          'Columbia University researchers estimate between one and three million Americans will relocate.',
+          'Studies suggest people tend to migrate toward cities with moderate climates, lower flood risk, and strong employment markets.',
+          'Minneapolis, Buffalo, and Detroit were once experiencing population decline.'
+        ],
+        ans: 2,
+        expl: 'Choice C explains the pattern that makes migration non-random: people move toward specific desirable characteristics — climate, flood risk, and jobs. This is the direct evidence of deliberate or predictable movement. The other choices describe scale, projections, or prior decline, not the rationale behind destination choices.'
+      },
+      {
+        pts: 300,
+        stem: 'A reader argues that the passage presents climate migration as entirely positive. Which detail from the passage most directly contradicts this interpretation?',
+        opts: [
+          'One to three million Americans may relocate by 2070.',
+          'Some cities were previously experiencing population decline.',
+          'The influx of newcomers raises concerns about affordability and displacement of long-term residents.',
+          'People tend to migrate toward cities with strong employment markets.'
+        ],
+        ans: 2,
+        expl: 'Choice C explicitly introduces negative consequences — affordability concerns and potential displacement — directly countering any purely positive reading. The other choices are neutral descriptions of migration patterns or city histories that do not themselves signal downsides.'
+      },
+      {
+        pts: 400,
+        stem: 'Which phrase from the passage most clearly suggests that the designation of "climate havens" is still speculative or in progress rather than established fact?',
+        opts: [
+          '"one of the largest internal migrations in American history"',
+          '"already pushing residents out of coastal and arid regions"',
+          '"are being repositioned as potential \'climate havens\'"',
+          '"pressure on housing, infrastructure, and public services"'
+        ],
+        ans: 2,
+        expl: 'The word "potential" in Choice C signals uncertainty — these cities have not yet been confirmed as climate havens, only positioned as possible ones. "Being repositioned" also suggests this is an ongoing framing, not an established category. The other phrases describe scope, current movement, or anticipated consequences without the same tentativeness.'
+      },
+      {
+        pts: 500,
+        stem: 'The author includes both the Columbia University estimate and the description of challenges facing receiving communities. What is the most likely purpose of combining these two types of evidence?',
+        opts: [
+          'To argue that climate migration is too large a problem for cities to manage',
+          'To present a balanced picture that acknowledges both the scale of migration and its complex consequences',
+          'To suggest that Midwestern cities are unprepared for population growth',
+          'To contradict the claim that climate change is a major driver of relocation'
+        ],
+        ans: 1,
+        expl: 'The passage includes a large-scale numerical projection (Columbia estimate) alongside a nuanced look at local consequences (housing, displacement). Together, these create a layered view — neither catastrophizing nor minimizing — that characterizes balanced informational writing. Choice A overstates the tone. Choice C is not directly stated. Choice D is contradicted by the passage\'s premise.'
+      }
+    ]
+  },
+
+  /* ────────────────────────────────────────────────
+     CAT 2 — QUANTITATIVE EVIDENCE
+     Passage + chart: social media & teen sleep
+     ──────────────────────────────────────────────── */
+  {
+    id: 'quant',
+    label: 'Quantitative Evidence',
+    icon: '📊',
+    color: '#f39c12',
+    dark: '#5a3800',
+    passage: `A 2023 longitudinal study tracked the social media habits and sleep patterns of 2,400 teenagers aged 13 to 17 over eighteen months. Participants were grouped by daily social media use: under one hour, one to three hours, and over three hours. Researchers measured average nightly sleep duration and self-reported sleep quality on a scale of 1 to 10. The study found that teenagers who used social media for more than three hours daily averaged 6.2 hours of sleep per night — significantly below the recommended 8 to 10 hours for adolescents. By contrast, teens in the under-one-hour group averaged 8.1 hours. Sleep quality scores followed a similar downward trend. Researchers noted that late-night screen use appeared to suppress melatonin production, disrupting the body's natural sleep cycle. The study controlled for academic workload and extracurricular commitments to isolate the effect of social media use.`,
+    data: `Figure 1 — Avg. Nightly Sleep (hours) by Daily Social Media Use\nUnder 1 hour/day:   8.1 hrs\n1–3 hours/day:      7.3 hrs\nOver 3 hours/day:   6.2 hrs\n\nFigure 2 — Avg. Sleep Quality Score (1–10) by Daily Social Media Use\nUnder 1 hour/day:   8.4\n1–3 hours/day:      7.1\nOver 3 hours/day:   5.6`,
+    qs: [
+      {
+        pts: 100,
+        stem: 'According to Figure 1, how many fewer hours of sleep did teens using social media for over three hours per day get compared to teens using it for under one hour?',
+        opts: [
+          '0.8 hours',
+          '1.1 hours',
+          '1.9 hours',
+          '2.3 hours'
+        ],
+        ans: 2,
+        expl: '8.1 hours (under 1 hr group) − 6.2 hours (over 3 hrs group) = 1.9 hours. Choice C. Choice A (0.8) is the gap between the 1–3 hour and over-3-hour groups. Choice B (1.1) is incorrect math. Choice D is not supported by any comparison in the data.'
+      },
+      {
+        pts: 200,
+        stem: 'A student claims that the quality of sleep declines more sharply between the first two groups than between the second and third. Which data from Figure 2 most directly refutes this claim?',
+        opts: [
+          'The under-1-hour group scored 8.4 and the over-3-hour group scored 5.6, a gap of 2.8.',
+          'The drop from 8.4 to 7.1 (1.3 points) between the first and second groups is smaller than the drop from 7.1 to 5.6 (1.5 points) between the second and third groups.',
+          'The 1–3 hour group averaged 7.3 hours of sleep, compared to 8.1 for the under-1-hour group.',
+          'All three groups scored below the maximum of 10 on the sleep quality scale.'
+        ],
+        ans: 1,
+        expl: 'Choice B directly calculates both gaps and shows the student\'s claim is false: the drop between groups 2 and 3 (1.5 pts) is actually larger than between groups 1 and 2 (1.3 pts). Choice A notes the total spread but doesn\'t address where the sharpest drop occurs. Choice C is from Figure 1, not Figure 2. Choice D is irrelevant to the comparison.'
+      },
+      {
+        pts: 300,
+        stem: 'Based on the passage and the figures, which conclusion is best supported?',
+        opts: [
+          'Every additional hour of social media use reduces sleep by exactly 0.95 hours.',
+          'Academic workload is the primary cause of poor sleep quality among teenagers.',
+          'There is an inverse relationship between social media use and both sleep duration and sleep quality.',
+          'Teens who sleep fewer hours are more likely to use social media excessively.'
+        ],
+        ans: 2,
+        expl: 'Both figures show that as social media use increases, sleep duration and quality consistently decrease — a clear inverse relationship (C). Choice A overstates precision; the drops are not equal increments. Choice B is contradicted — the study controlled for academic workload to isolate social media as the variable. Choice D reverses causation in a way the study does not establish.'
+      },
+      {
+        pts: 400,
+        stem: 'The passage states researchers "controlled for academic workload and extracurricular commitments." Why is this methodological detail significant to interpreting the figures?',
+        opts: [
+          'It proves that social media use is the only factor that affects teen sleep.',
+          'It confirms that students with heavy homework loads sleep fewer hours than others.',
+          'It strengthens the case that differences in sleep are attributable to social media use rather than other busy-schedule factors.',
+          'It indicates that the researchers measured academic performance alongside sleep quality.'
+        ],
+        ans: 2,
+        expl: 'Controlling for confounding variables (homework, activities) allows researchers to attribute sleep differences specifically to social media — Choice C. Without this control, one could argue that busy students use both more social media and sleep less, making the relationship spurious. Choice A overstates ("only factor"). Choice B is not stated. Choice D mischaracterizes what "controlled for" means in research design.'
+      },
+      {
+        pts: 500,
+        stem: 'Which pairing of data from the two figures best illustrates that social media use affects both the amount and the quality of sleep?',
+        opts: [
+          'Under-1-hour group: 8.1 hours of sleep; over-3-hour group: 5.6 quality score',
+          'Under-1-hour group: 8.1 hours and 8.4 quality; over-3-hour group: 6.2 hours and 5.6 quality',
+          '1–3 hours group: 7.3 hours of sleep; over-3-hour group: 5.6 quality score',
+          'Under-1-hour group: 8.4 quality score; 1–3 hours group: 7.1 quality score'
+        ],
+        ans: 1,
+        expl: 'Choice B is the only option that presents matching data on both sleep duration (Figure 1) and sleep quality (Figure 2) for the same two groups, directly comparing both dimensions of sleep impact. Choice A mixes figures without matching groups properly. Choices C and D present partial data that doesn\'t simultaneously address both duration and quality for a meaningful comparison.'
+      }
+    ]
+  },
+
+  /* ────────────────────────────────────────────────
+     CAT 3 — INFERENCE
+     Passage: fiction — a ceramics teacher
+     ──────────────────────────────────────────────── */
+  {
+    id: 'inference',
+    label: 'Inference',
+    icon: '🔍',
+    color: '#3498db',
+    dark: '#0d2d4a',
+    passage: `The kiln room at the back of the school smelled of clay and something older — mineral, almost geological. Ms. Adeyemi was already there when students arrived, her hands gray to the wrist, a half-formed bowl rotating slowly on the wheel before her. She did not look up when the first students entered, and they, by some unspoken agreement, did not disturb her. They settled at their own stations and began working. Only when the bowl was finished — smoothed, collared, and set on a drying board — did Ms. Adeyemi rise and move among them. She stopped longest at the station of a boy named Tomas, who had been struggling with the same cylinder for three weeks. Without speaking, she put her hands over his and guided them through the pressure, the angle, the rhythm. When she finally stepped back, the cylinder had walls that were even, balanced, and thin. Tomas stared at it for a moment, then at his own hands, as if wondering whether they were still the same ones he'd walked in with.`,
+    qs: [
+      {
+        pts: 100,
+        stem: 'Based on the passage, it can reasonably be inferred that Ms. Adeyemi is:',
+        opts: [
+          'a substitute teacher who is unfamiliar with the students in her class',
+          'a highly skilled ceramics teacher whose expertise commands quiet respect from students',
+          'an artist who resents having to teach and prefers to work alone',
+          'a new teacher who is still learning how to manage a classroom'
+        ],
+        ans: 1,
+        expl: 'Ms. Adeyemi is already at the wheel when students arrive, works expertly, and students naturally respect her space without being told. Her hands-on correction of Tomas demonstrates mastery. Nothing supports resentment (C), unfamiliarity (A), or inexperience (D).'
+      },
+      {
+        pts: 200,
+        stem: 'The detail that students "by some unspoken agreement, did not disturb" Ms. Adeyemi most strongly suggests:',
+        opts: [
+          'the students are afraid of being punished for interrupting her',
+          'the students have a rule posted in the classroom requiring silence',
+          'the students intuitively recognize and respect Ms. Adeyemi\'s focused creative process',
+          'Ms. Adeyemi has told students previously never to speak when she is working'
+        ],
+        ans: 2,
+        expl: 'The word "unspoken" is key — this is not a rule or a fear-based response, but an intuitive collective understanding. The students recognize something worth not disrupting. Choice A implies fear, unsupported. Choice B contradicts "unspoken." Choice D similarly implies explicit instruction, which "unspoken" rules out.'
+      },
+      {
+        pts: 300,
+        stem: 'The author\'s description of the kiln room smell as "older — mineral, almost geological" most likely serves to:',
+        opts: [
+          'indicate that the school is old and has not been renovated in many years',
+          'establish that clay is an ancient medium, grounding the art in something deep and enduring',
+          'suggest that the room is unclean and should be maintained more carefully',
+          'show that Ms. Adeyemi prefers natural materials over synthetic ones'
+        ],
+        ans: 1,
+        expl: 'The language — "older," "mineral," "geological" — evokes deep time and elemental nature, suggesting that ceramics connects practitioners to something ancient. This atmospheric detail enriches the setting beyond mere description. Choice A is a literal misreading. Choice C introduces a judgment absent from the passage. Choice D draws an unsupported conclusion about preference.'
+      },
+      {
+        pts: 400,
+        stem: 'Tomas stares at "his own hands, as if wondering whether they were still the same ones he\'d walked in with." What does this most likely imply?',
+        opts: [
+          'Tomas is confused because his hands are covered in clay for the first time',
+          'Tomas is frustrated that Ms. Adeyemi did most of the work on his cylinder',
+          'Tomas has experienced a moment of growth that makes him see his own potential differently',
+          'Tomas plans to ask Ms. Adeyemi to demonstrate the technique again next class'
+        ],
+        ans: 2,
+        expl: 'The metaphor of wondering if his hands are "still the same" captures a transformative experience — as if the knowledge transferred through Ms. Adeyemi\'s guidance has changed what his hands are capable of. This is a moment of realization about his own potential. Choice A is too literal. Choice B is unsupported — the passage shows no frustration. Choice D is speculative with no textual support.'
+      },
+      {
+        pts: 500,
+        stem: 'Based on the passage as a whole, what can be inferred about Ms. Adeyemi\'s teaching philosophy?',
+        opts: [
+          'She believes students learn best from lectures and demonstrations rather than hands-on practice',
+          'She prioritizes technical precision above all else, even at the cost of student creativity',
+          'She teaches through presence, modeling, and silent physical guidance rather than verbal instruction',
+          'She gives struggling students extra assignments to catch up with the rest of the class'
+        ],
+        ans: 2,
+        expl: 'Every element of Ms. Adeyemi\'s teaching is non-verbal: she works at the wheel herself (modeling), moves among students silently, and corrects Tomas without speaking. Her method is embodied and physical, not instructional in the conventional sense. Choice A contradicts her hands-on approach. Choice B is unsupported — the text doesn\'t rank precision over creativity. Choice D is entirely invented.'
+      }
+    ]
+  },
+
+  /* ────────────────────────────────────────────────
+     CAT 4 — CENTRAL IDEAS & DETAILS
+     Passage: the psychology of procrastination
+     ──────────────────────────────────────────────── */
+  {
+    id: 'central',
+    label: 'Central Ideas & Details',
+    icon: '💡',
+    color: '#9b59b6',
+    dark: '#2d0e45',
+    passage: `For decades, psychologists assumed that procrastination was primarily a problem of time management — a failure to plan, prioritize, or estimate how long tasks would take. Recent research, however, has fundamentally shifted this understanding. Procrastination is now widely recognized as an emotion regulation problem, not a scheduling one. When people avoid a task, they are typically not avoiding the task itself but the negative emotions associated with it: anxiety, boredom, self-doubt, or fear of failure. Completing the avoided task offers relief, but only temporarily — the next difficult task triggers the same avoidance cycle. This insight changes how experts recommend addressing procrastination. Instead of productivity apps and calendars, psychologists now emphasize self-compassion, breaking tasks into smaller units to reduce emotional overwhelm, and identifying the specific emotional triggers tied to each avoided task. Importantly, research shows that people who respond to their own procrastination with self-criticism are more likely to procrastinate again — while those who treat themselves with kindness tend to move forward sooner.`,
+    qs: [
+      {
+        pts: 100,
+        stem: 'Which statement best expresses the central idea of the passage?',
+        opts: [
+          'Procrastination is best addressed through better scheduling tools and time-management apps.',
+          'Recent research has reframed procrastination as an emotional problem requiring emotion-focused solutions.',
+          'People procrastinate because they are lazy and unwilling to begin difficult tasks.',
+          'Self-doubt is the most common emotional trigger behind procrastination.'
+        ],
+        ans: 1,
+        expl: 'The passage\'s central argument is that procrastination has been reframed from a time-management issue to an emotion regulation problem, and that solutions have shifted accordingly (B). Choice A represents the outdated understanding the passage corrects. Choice C introduces a judgment not found in the passage. Choice D focuses on one detail rather than the overall argument.'
+      },
+      {
+        pts: 200,
+        stem: 'According to the passage, what do people actually avoid when they procrastinate?',
+        opts: [
+          'The time investment required to complete difficult tasks',
+          'The judgment of others who may evaluate their work',
+          'The negative emotions — such as anxiety and self-doubt — associated with the task',
+          'The physical discomfort of sitting still and focusing for long periods'
+        ],
+        ans: 2,
+        expl: 'The passage states explicitly: "they are typically not avoiding the task itself but the negative emotions associated with it: anxiety, boredom, self-doubt, or fear of failure." Choice C matches this directly. Choices A, B, and D are not stated in the passage as the target of avoidance.'
+      },
+      {
+        pts: 300,
+        stem: 'The passage notes that completing an avoided task "offers relief, but only temporarily." Why does the author include this detail?',
+        opts: [
+          'To suggest that completing tasks is not actually worthwhile if the relief disappears',
+          'To explain why therapy is more effective than task completion for chronic procrastinators',
+          'To show that procrastination is a repeating cycle — the underlying emotional triggers remain even after one task is done',
+          'To argue that the best approach is to reduce the number of tasks a person must complete'
+        ],
+        ans: 2,
+        expl: 'The phrase "only temporarily" signals that the emotional root cause persists — completing one task doesn\'t eliminate the pattern because the next difficult task will trigger the same response. The detail establishes why procrastination is cyclical (C). Choice A misreads the implication. Choices B and D introduce recommendations not drawn from this detail.'
+      },
+      {
+        pts: 400,
+        stem: 'Based on the passage, how has the recommended approach to treating procrastination changed?',
+        opts: [
+          'Psychologists now rely more on medication than on behavioral strategies.',
+          'Experts have moved away from time-management tools and toward emotional awareness and self-compassion.',
+          'Researchers now believe procrastination is untreatable without professional counseling.',
+          'The focus has shifted from managing deadlines to increasing a person\'s motivation through rewards.'
+        ],
+        ans: 1,
+        expl: 'The passage directly states: "Instead of productivity apps and calendars, psychologists now emphasize self-compassion, breaking tasks into smaller units...and identifying emotional triggers." This matches Choice B precisely. Choices A, C, and D introduce interventions (medication, counseling, rewards) that are not mentioned in the passage.'
+      },
+      {
+        pts: 500,
+        stem: 'The final sentence — that self-critical procrastinators are more likely to procrastinate again while kind ones move forward sooner — primarily serves to:',
+        opts: [
+          'introduce a counterargument challenging the emotion-regulation theory of procrastination',
+          'suggest that personality type, not emotion, is the true cause of procrastination',
+          'provide research-backed evidence that reinforces the value of self-compassion as a practical intervention',
+          'warn readers that self-compassion alone cannot cure procrastination without professional help'
+        ],
+        ans: 2,
+        expl: 'The final sentence supplies empirical support for self-compassion as an effective response — it\'s not just a feel-good idea but a research-backed strategy (C). It does not introduce a counterargument (A), shift the cause to personality (B), or add a warning about limitations (D). Instead, it closes the passage by validating the new emotional framework with concrete evidence.'
+      }
+    ]
+  },
+
+  /* ────────────────────────────────────────────────
+     CAT 5 — GRAMMAR
+     Topics: subject-verb agreement, comma splices,
+     subordinate clauses, complex sentences,
+     compound sentences
+     ──────────────────────────────────────────────── */
+  {
+    id: 'grammar',
+    label: 'Grammar',
+    icon: '✍️',
+    color: '#e74c3c',
+    dark: '#4a0e0e',
+    qs: [
+      {
+        pts: 100,
+        stem: 'Which sentence correctly demonstrates subject-verb agreement?',
+        opts: [
+          'The team of scientists are presenting their findings at noon.',
+          'Neither the coach nor the players was ready for the final whistle.',
+          'Each of the students in both classrooms has submitted a permission slip.',
+          'The collection of rare stamps were donated to the museum last spring.'
+        ],
+        ans: 2,
+        expl: '"Each" is always singular, so it takes the singular verb "has" — Choice C is correct. In Choice A, "team" is a collective noun treated as singular here, so "is" would be correct, not "are." In Choice B, with "neither...nor," the verb agrees with the closer subject "players" (plural), so "were" is correct, not "was." In Choice D, the subject is "collection" (singular), so "was donated" is correct, not "were donated."'
+      },
+      {
+        pts: 200,
+        stem: 'Which of the following is a comma splice, and which revision best corrects it?',
+        opts: [
+          '"The rain started suddenly, we ran for cover." — Corrected by adding "and" after the comma: "The rain started suddenly, and we ran for cover."',
+          '"Running through the park, she noticed the flowers blooming." — Corrected by removing the comma.',
+          '"Although the test was difficult, most students passed." — Corrected by placing a period after "difficult."',
+          '"The library closes at nine, however the study hall stays open until midnight." — Corrected by removing "however."'
+        ],
+        ans: 0,
+        expl: 'A comma splice joins two independent clauses with only a comma. Choice A correctly identifies "The rain started suddenly, we ran for cover" as a comma splice and fixes it by adding a coordinating conjunction ("and") after the comma. Choice B is not a comma splice — it\'s a correctly punctuated participial phrase. Choice C is already correct; "Although" makes the first clause dependent. Choice D identifies a real comma splice but offers an incorrect fix — removing "however" doesn\'t solve it; a semicolon before "however" would.'
+      },
+      {
+        pts: 300,
+        stem: 'Which sentence contains a correctly used subordinate clause?',
+        opts: [
+          'Because she studied every night. She earned the highest score in the class.',
+          'The documentary, which explored deep-sea ecosystems it was fascinating to marine biologists.',
+          'After the curtain fell, the audience erupted into a long and enthusiastic standing ovation.',
+          'Although Marcus wanted to attend the concert, but he had already made other plans.'
+        ],
+        ans: 2,
+        expl: 'Choice C correctly uses the subordinate clause "After the curtain fell" — it cannot stand alone, and it is properly attached to the independent clause "the audience erupted into a standing ovation." Choice A creates a fragment by putting a period after the subordinate clause "Because she studied every night." Choice B contains a pronoun error ("it was fascinating") that creates a run-on. Choice D uses both "Although" and "but" together, which is redundant — subordinating and coordinating conjunctions should not both introduce the same relationship.'
+      },
+      {
+        pts: 400,
+        stem: 'Which sentence is an example of a correctly written complex sentence?',
+        opts: [
+          'Jordan loves hiking, and she also enjoys rock climbing on weekends.',
+          'The engineer who designed the bridge retired before it was completed.',
+          'The storm passed; the roads cleared quickly.',
+          'Running, jumping, and climbing are all forms of physical exercise.'
+        ],
+        ans: 1,
+        expl: 'A complex sentence contains one independent clause and at least one dependent (subordinate) clause. Choice B contains the relative clause "who designed the bridge" (dependent) attached to the independent clause — making it a correct complex sentence. Choice A is a compound sentence — two independent clauses joined by "and." Choice C is a compound sentence joined by a semicolon. Choice D is a simple sentence with a compound subject but no subordinate clause.'
+      },
+      {
+        pts: 500,
+        stem: 'Which sentence is a correctly constructed compound sentence?',
+        opts: [
+          'Since the projector malfunctioned, the presentation was postponed until Friday.',
+          'The students finished their essays, they submitted them online before midnight.',
+          'Selena practiced piano for two hours every day, so she improved rapidly over the semester.',
+          'Exhausted from the long journey, the travelers finally reached their destination.'
+        ],
+        ans: 2,
+        expl: 'A compound sentence joins two independent clauses using a coordinating conjunction (FANBOYS) or a semicolon. Choice C correctly joins "Selena practiced piano for two hours every day" and "she improved rapidly over the semester" with the coordinating conjunction "so" — both are independent clauses. Choice A is a complex sentence (the "Since" clause is dependent). Choice B is a comma splice — two independent clauses joined with only a comma and no conjunction. Choice D is a simple sentence with an introductory participial phrase, not a compound sentence.'
+      }
+    ]
+  }
+];
+
+/* ═══════════════════════════════════════════════════
+   STATE
+   ═══════════════════════════════════════════════════ */
+const LETTERS = ['A','B','C','D'];
+let score = 0;
+let played = {}; // "ci-qi" -> {correct, pts}
+let activeTile = null;
+let hasAnswered = false;
+
+const TOTAL = CATS.reduce((s, c) => s + c.qs.length, 0);
+
+/* ═══════════════════════════════════════════════════
+   START
+   ═══════════════════════════════════════════════════ */
+function startGame() {
+  score = 0; played = {}; activeTile = null; hasAnswered = false;
+  document.getElementById('splashScreen').classList.remove('active');
+  document.getElementById('gameScreen').classList.add('active');
+  document.getElementById('scoreDisp').textContent = '0';
+  renderBoard();
+}
+
+/* ═══════════════════════════════════════════════════
+   BOARD RENDERING
+   ═══════════════════════════════════════════════════ */
+function renderBoard() {
+  const board = document.getElementById('board');
+  board.innerHTML = '';
+
+  // Category headers
+  CATS.forEach(cat => {
+    const hdr = document.createElement('div');
+    hdr.className = 'col-header';
+    hdr.style.background = `linear-gradient(160deg, ${cat.color}dd 0%, ${cat.dark} 100%)`;
+    hdr.style.borderBottom = `3px solid ${cat.color}`;
+    hdr.innerHTML = `<span class="h-icon">${cat.icon}</span>${cat.label}`;
+    board.appendChild(hdr);
+  });
+
+  // Tiles: 5 rows (pts 100–500)
+  [0,1,2,3,4].forEach(qi => {
+    CATS.forEach((cat, ci) => {
+      const key = `${ci}-${qi}`;
+      const state = played[key];
+      const q = cat.qs[qi];
+
+      const wrap = document.createElement('div');
+      wrap.className = 'flip-wrap' + (state ? ' flipped used' : '');
+      wrap.id = `fw-${key}`;
+      if (!state) wrap.onclick = () => openTile(ci, qi);
+
+      const inner = document.createElement('div');
+      inner.className = 'flip-inner';
+
+      // Front face
+      const front = document.createElement('div');
+      front.className = 'flip-face flip-front';
+      front.innerHTML = `<div class="pts-val">${q.pts}</div>`;
+
+      // Back face
+      const back = document.createElement('div');
+      back.id = `back-${key}`;
+      back.className = 'flip-face flip-back' + (state ? (state.correct ? ' won' : ' lost') : '');
+      if (state) {
+        const sign = state.correct ? '+' : '−';
+        const delta = state.correct ? state.pts : Math.floor(state.pts / 2);
+        back.innerHTML = `
+          <div class="flip-icon">${state.correct ? '✓' : '✗'}</div>
+          <div class="flip-delta">${sign}${delta}</div>`;
+      }
+
+      inner.append(front, back);
+      wrap.appendChild(inner);
+      board.appendChild(wrap);
+    });
+  });
+
+  updateStatus();
+}
+
+function updateStatus() {
+  const done = Object.keys(played).length;
+  const correct = Object.values(played).filter(s => s.correct).length;
+  document.getElementById('progressFill').style.width = `${(done / TOTAL) * 100}%`;
+
+  if (done === 0) {
+    document.getElementById('statusLine').textContent = 'Choose a category and point value to start';
+  } else if (done === TOTAL) {
+    document.getElementById('statusLine').textContent = `All ${TOTAL} questions answered — ${correct} correct!`;
+    setTimeout(showResults, 700);
+  } else {
+    document.getElementById('statusLine').textContent =
+      `${done} of ${TOTAL} answered · ${correct} correct`;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   OPEN TILE (show modal)
+   ═══════════════════════════════════════════════════ */
+function openTile(ci, qi) {
+  const key = `${ci}-${qi}`;
+  if (played[key]) return;
+  activeTile = { ci, qi };
+  hasAnswered = false;
+
+  const cat = CATS[ci];
+  const q = cat.qs[qi];
+
+  // Header
+  document.getElementById('mPts').textContent = `${q.pts} pts`;
+  const catEl = document.getElementById('mCat');
+  catEl.textContent = cat.label;
+  catEl.style.background = cat.color;
+  catEl.style.color = '#fff';
+
+  // Passage
+  const mp = document.getElementById('mPassage');
+  if (cat.passage) { mp.style.display = 'block'; mp.textContent = cat.passage; }
+  else mp.style.display = 'none';
+
+  // Data
+  const md = document.getElementById('mData');
+  if (cat.data) {
+    md.style.display = 'block';
+    const lines = cat.data.split('\n');
+    md.innerHTML = `<strong>Study Data</strong>` + lines.map(l => `<div>${l}</div>`).join('');
+  } else {
+    md.style.display = 'none';
+  }
+
+  // Stem
+  document.getElementById('mStem').textContent = q.stem;
+
+  // Choices
+  const choicesEl = document.getElementById('mChoices');
+  choicesEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.innerHTML = `<span class="c-letter">${LETTERS[i]}</span><span>${opt}</span>`;
+    btn.onclick = () => selectAnswer(i);
+    choicesEl.appendChild(btn);
+  });
+
+  // Reset feedback & button
+  document.getElementById('mFeedback').className = 'm-feedback';
+  document.getElementById('backBtn').className = 'back-btn';
+
+  document.getElementById('modalBg').classList.add('open');
+}
+
+/* ═══════════════════════════════════════════════════
+   SELECT ANSWER
+   ═══════════════════════════════════════════════════ */
+function selectAnswer(idx) {
+  if (hasAnswered) return;
+  hasAnswered = true;
+
+  const { ci, qi } = activeTile;
+  const q = CATS[ci].qs[qi];
+  const isCorrect = idx === q.ans;
+
+  const btns = document.querySelectorAll('.choice');
+  btns.forEach(b => b.disabled = true);
+
+  if (isCorrect) {
+    btns[idx].classList.add('correct');
+    score += q.pts;
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.ans].classList.add('reveal');
+    score = Math.max(0, score - Math.floor(q.pts / 2));
+  }
+
+  document.getElementById('scoreDisp').textContent = score;
+
+  const fb = document.getElementById('mFeedback');
+  fb.className = 'm-feedback show ' + (isCorrect ? 'ok' : 'ng');
+  document.getElementById('mFbHead').textContent = isCorrect
+    ? `✓  Correct! +${q.pts} points`
+    : `✗  Incorrect — Answer: ${LETTERS[q.ans]}  (−${Math.floor(q.pts/2)} pts)`;
+  document.getElementById('mFbBody').textContent = q.expl;
+
+  document.getElementById('backBtn').className = 'back-btn show';
+
+  // Record result
+  played[`${ci}-${qi}`] = { correct: isCorrect, pts: q.pts };
+}
+
+/* ═══════════════════════════════════════════════════
+   CLOSE MODAL — flip tile
+   ═══════════════════════════════════════════════════ */
+function closeModal() {
+  document.getElementById('modalBg').classList.remove('open');
+
+  if (activeTile) {
+    const { ci, qi } = activeTile;
+    const key = `${ci}-${qi}`;
+    const state = played[key];
+    if (!state) return; // closed without answering
+
+    const wrap = document.getElementById(`fw-${key}`);
+    if (wrap) {
+      wrap.onclick = null;
+      wrap.classList.add('flipped', 'used');
+      const back = document.getElementById(`back-${key}`);
+      if (back) {
+        back.className = 'flip-face flip-back ' + (state.correct ? 'won' : 'lost');
+        const sign = state.correct ? '+' : '−';
+        const delta = state.correct ? state.pts : Math.floor(state.pts / 2);
+        back.innerHTML = `
+          <div class="flip-icon">${state.correct ? '✓' : '✗'}</div>
+          <div class="flip-delta">${sign}${delta}</div>`;
+      }
+    }
+    updateStatus();
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   RESULTS
+   ═══════════════════════════════════════════════════ */
+function showResults() {
+  document.getElementById('gameScreen').classList.remove('active');
+  document.getElementById('endScreen').classList.add('active');
+
+  document.getElementById('finalScore').textContent = score;
+
+  const done = Object.keys(played).length;
+  const correct = Object.values(played).filter(s => s.correct).length;
+  const pct = done > 0 ? correct / done : 0;
+
+  let verdict, msg;
+  if (pct >= .85) {
+    verdict = '🏆 Outstanding Reader';
+    msg = 'Excellent command of reading skills across all four areas. You\'re walking into the PSAT prepared and confident.';
+  } else if (pct >= .65) {
+    verdict = '💪 Strong Performance';
+    msg = 'Solid work — you\'ve demonstrated real reading strength. Study the explanations for questions you missed to sharpen your edge.';
+  } else if (pct >= .45) {
+    verdict = '📚 Good Progress';
+    msg = 'You\'re building the right skills. Read every explanation in the answer key carefully — pattern recognition is the key to PSAT success.';
+  } else {
+    verdict = '🎯 Keep Practicing';
+    msg = 'Every question you review tonight is preparation for tomorrow. Work through the full answer key below — the explanations are your best study guide.';
+  }
+
+  document.getElementById('endVerdict').textContent = verdict;
+  document.getElementById('endMsg').textContent = msg;
+
+  // Category breakdown pills
+  const cr = document.getElementById('catResults');
+  cr.innerHTML = '';
+  CATS.forEach((cat, ci) => {
+    let c = 0, t = 0;
+    cat.qs.forEach((_, qi) => {
+      const s = played[`${ci}-${qi}`];
+      if (s) { t++; if (s.correct) c++; }
+    });
+    if (t > 0) {
+      const pill = document.createElement('div');
+      pill.className = 'cat-res-pill';
+      pill.innerHTML = `${cat.icon} ${cat.label}: <strong>${c}/${t}</strong>`;
+      cr.appendChild(pill);
+    }
+  });
+
+  buildAnswerKey();
+}
+
+/* ═══════════════════════════════════════════════════
+   ANSWER KEY
+   ═══════════════════════════════════════════════════ */
+function buildAnswerKey() {
+  const content = document.getElementById('akContent');
+  content.innerHTML = '';
+
+  CATS.forEach((cat, ci) => {
+    const catBlock = document.createElement('div');
+    catBlock.className = 'ak-cat';
+
+    const catName = document.createElement('div');
+    catName.className = 'ak-cat-name';
+    catName.style.color = cat.color;
+    catName.innerHTML = `${cat.icon}&nbsp; ${cat.label}`;
+    catBlock.appendChild(catName);
+
+    cat.qs.forEach((q, qi) => {
+      const key = `${ci}-${qi}`;
+      const state = played[key];
+
+      let statusHTML = '';
+      if (state) {
+        statusHTML = state.correct
+          ? `<span class="ak-you-correct">✓ Correct</span>`
+          : `<span class="ak-you-wrong">✗ Incorrect</span>`;
+      } else {
+        statusHTML = `<span class="ak-not-played">Not played</span>`;
+      }
+
+      const item = document.createElement('div');
+      item.className = 'ak-item';
+      item.innerHTML = `
+        <div class="ak-row">
+          <span class="ak-pts-lbl">${q.pts}</span>
+          <span class="ak-ans-badge">${LETTERS[q.ans]}</span>
+          ${statusHTML}
+        </div>
+        <div class="ak-expl">${q.expl}</div>`;
+      catBlock.appendChild(item);
+    });
+
+    content.appendChild(catBlock);
+  });
+}
+
+function goToKey() {
+  document.getElementById('akSection').scrollIntoView({ behavior: 'smooth' });
+}
+
+function restartGame() {
+  document.getElementById('endScreen').classList.remove('active');
+  startGame();
+}
+</script>
+</body>
+</html>
